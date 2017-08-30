@@ -12,26 +12,22 @@
 function isAllTrue(array, fn) {
     var errorEmptyArray = 'empty array';
     var errorNotAFunc = 'fn is not a function';
+
     if (array.length === 0 || !Array.isArray(array)) {
         throw new Error(errorEmptyArray)
-    } else if(typeof fn !== 'function') {
+    } else if (typeof fn !== 'function') {
         throw new Error(errorNotAFunc)
     }
 
-    try {
-        for (var i = 0; i < array.length; i++) {
-            var funTrue = fn() {
-                return true;
-            }
-        }
+    for (var i = 0; i < array.length; i++) {
+        var result = fn(array[i]);
 
-    } catch(e) {
-        if (e.message === errorEmptyArray) {
-            console.log(e.message);
-        } else if (e.message === errorNotAFunc) {
-            console.log(e.message);
+        if (!result) {
+            return false;
         }
     }
+
+    return true;
 }
 
 /*
@@ -44,6 +40,24 @@ function isAllTrue(array, fn) {
  Зарпещено использовать встроенные методы для работы с массивами
  */
 function isSomeTrue(array, fn) {
+    var errorEmptyArray = 'empty array';
+    var errorNotAFunc = 'fn is not a function';
+
+    if (array.length === 0 || !Array.isArray(array)) {
+        throw new Error(errorEmptyArray);
+    } else if (typeof fn !== 'function') {
+        throw new Error(errorNotAFunc);
+    }
+
+    for (var i = 0; i < array.length; i++) {
+        var result = fn(array[i]);
+
+        if (result) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 /*
@@ -55,6 +69,23 @@ function isSomeTrue(array, fn) {
  - fn не является функцией (с текстом "fn is not a function")
  */
 function returnBadArguments(fn) {
+    var errorNotAFunc = 'fn is not a function';
+
+    if (typeof fn !== 'function') {
+        throw new Error(errorNotAFunc)
+    }
+
+    var result = [];
+
+    for (var i = 1; i < arguments.length; i++) {
+        try {
+            fn(arguments[i]);
+        } catch (e) {
+            result.push(arguments[i]);
+        }
+    }
+
+    return result;
 }
 
 /*
@@ -71,7 +102,49 @@ function returnBadArguments(fn) {
  - number не является числом (с текстом "number is not a number")
  - какой-либо из аргументов div является нулем (с текстом "division by 0")
  */
-function calculator() {
+function calculator(number = 0) {
+    var errorNotANumber = 'number is not a number';
+    var errorDivisionZero = 'division by 0';
+
+    if (typeof number !== 'number') {
+        throw new Error(errorNotANumber)
+    }
+
+    var result = {
+        sum: function () {
+            for (var i = 0; i < arguments.length; i++) {
+                number += arguments[i];
+            }
+
+            return number;
+        },
+        dif: function () {
+            for (var i = 0; i < arguments.length; i++) {
+                number -= arguments[i];
+            }
+
+            return number;
+        },
+        div: function () {
+            for (var i = 0; i < arguments.length; i++) {
+                if (arguments[i] === 0) {
+                    throw new Error(errorDivisionZero);
+                }
+                number /= arguments[i];
+            }
+
+            return number;
+        },
+        mul: function () {
+            for (var i = 0; i < arguments.length; i++) {
+                number *= arguments[i];
+            }
+
+            return number;
+        }
+    };
+
+    return result;
 }
 
 export {
