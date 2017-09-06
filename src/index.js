@@ -8,7 +8,9 @@
  */
 function createDivWithText(text) {
     let createDiv = document.createElement('div');
+
     createDiv.textContent = text;
+
     return createDiv;
 }
 
@@ -20,7 +22,9 @@ function createDivWithText(text) {
  */
 function createAWithHref(hrefValue) {
     let createLink = document.createElement('a');
+
     createLink.setAttribute('href', hrefValue);
+
     return createLink;
 }
 
@@ -49,6 +53,15 @@ function prepend(what, where) {
  * т.к. следующим соседом этих элементов является элемент с тегом P
  */
 function findAllPSiblings(where) {
+    var result = [];
+
+    for (var i = 0; i < where.children.length; i++) {
+        if (where.children[i].nextElementSibling !== null && where.children[i].nextElementSibling.tagName === 'P') {
+            result.push(where.children[i]);
+        }
+    }
+
+    return result;
 }
 
 /**
@@ -83,6 +96,11 @@ function findError(where) {
  * должно быть преобразовано в <div></div><p></p>
  */
 function deleteTextNodes(where) {
+    for (var i = 0; i < where.childNodes.length; i++) {
+        if (where.childNodes[i].nodeType === 3) {
+            where.removeChild(where.childNodes[i]);
+        }
+    }
 }
 
 /**
@@ -96,6 +114,19 @@ function deleteTextNodes(where) {
  * должно быть преобразовано в <span><div><b></b></div><p></p></span>
  */
 function deleteTextNodesRecursive(where) {
+    var textTypeArray = [];
+
+    for (let i = 0; i < where.childNodes.length; i++) {
+        if (where.childNodes[i].nodeType === 3) {
+            textTypeArray.push(where.childNodes[i])
+        } else {
+            deleteTextNodesRecursive(where.childNodes[i]);
+        }
+    }
+
+    for (let i = 0; i < textTypeArray.length; i++) {
+        where.removeChild(textTypeArray[i]);
+    }
 }
 
 /**
@@ -121,6 +152,47 @@ function deleteTextNodesRecursive(where) {
  * }
  */
 function collectDOMStat(root) {
+    var obj = {
+        tags: {},
+        classes: {},
+        texts: 0
+    };
+
+    function collectClasses(el) {
+        if (el.classList) {
+            for (var i = 0; i < el.classList.length; i++) {
+                if (obj.classes.hasOwnProperty(el.classList[i])) {
+                    obj.classes[el.classList[i]] += 1;
+                } else {
+                    obj.classes[el.classList[i]] = 1;
+                }
+            }
+        }
+    }
+
+    function collectTags(el) {
+        if (el.nodeType === 3) {
+            obj.texts += 1;
+        } else {
+            if (obj.tags[el.tagName]) {
+                obj.tags[el.tagName] += 1;
+            } else {
+                obj.tags[el.tagName] = 1;
+            }
+        }
+    }
+
+    function inspectElements(el) {
+        for (var i = 0; i < el.childNodes.length; i++) {
+            collectClasses(el.childNodes[i]);
+            collectTags(el.childNodes[i]);
+            inspectElements(el.childNodes[i]);
+        }
+    }
+
+    inspectElements(root);
+
+    return obj;
 }
 
 /**
