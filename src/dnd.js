@@ -69,8 +69,8 @@ function addListeners(target) {
         }
 
         function moveAt(e) {
-            target.style.left = e.pageX - shiftX + 'px';
-            target.style.top = e.pageY - shiftY + 'px';
+            target.style.left = `${e.pageX} - ${shiftX} px`;
+            target.style.top = `${e.pageY} - ${shiftY} px`;
         }
 
         target.style.zIndex = newZIndex ++;
