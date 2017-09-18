@@ -21,7 +21,7 @@ function delayPromise(seconds) {
  */
 function loadAndSortTowns() {
     let townSort = (a, b) => {
-        if(a.name > b.name) {
+        if (a.name > b.name) {
             return 1;
         }
 

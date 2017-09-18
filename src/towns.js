@@ -37,7 +37,7 @@ let homeworkContainer = document.querySelector('#homework-container');
  */
 function loadTowns() {
     let townSort = (a, b) => {
-        if(a.name > b.name) {
+        if (a.name > b.name) {
             return 1;
         }
 
@@ -48,17 +48,40 @@ function loadTowns() {
         return 0;
     };
 
-    return new Promise(function (resolve) {
+    return new Promise(function (resolve, reject) {
         let xhr = new XMLHttpRequest();
 
         xhr.open('GET', 'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json');
         xhr.send();
         xhr.responseType = 'json';
         xhr.addEventListener('load', () => {
-            resolve(xhr.response);
+            if (xhr.status < 400) {
+                resolve(xhr.response);
+            } else {
+                reject();
+            }
         });
-    }).then(function (response) {
+    }).then(response => {
         response.sort(townSort);
+        townsArray = response;
+
+        return response;
+    }, () => {
+        let repeatBtn = document.createElement('BUTTON');
+        let errorDiv = document.createElement('DIV');
+
+        repeatBtn.innerText = 'Повторить';
+        errorDiv.innerText = 'Не удалось загрузить города';
+        filterResult.appendChild(errorDiv);
+        filterResult.appendChild(repeatBtn);
+        repeatBtn.onclick = () => {
+            filterResult.innerHTML = '';
+            loadTowns();
+        };
+    }).then(response => {
+        loadingBlock.style.display = 'none';
+        filterBlock.style.display = 'block';
+
         return response;
     });
 }
@@ -77,18 +100,34 @@ function loadTowns() {
  * @return {boolean}
  */
 function isMatching(full, chunk) {
+    return full.toLowerCase().indexOf(chunk.toLowerCase()) !== -1;
 }
 
 let loadingBlock = homeworkContainer.querySelector('#loading-block');
 let filterBlock = homeworkContainer.querySelector('#filter-block');
 let filterInput = homeworkContainer.querySelector('#filter-input');
 let filterResult = homeworkContainer.querySelector('#filter-result');
-let townsPromise;
+let townsArray;
 
 filterInput.addEventListener('keyup', function() {
-    loadingBlock.style.display = 'none';
-    filterResult.innerText = response;
-    filterBlock.style.display = 'block';
+    let inputValue = filterInput.value;
+
+    if (!inputValue) {
+        filterResult.innerHTML = '';
+
+        return;
+    }
+
+    filterResult.innerHTML = '';
+
+    for (var i = 0; i < townsArray.length; i++) {
+        if (townsArray[i].name.toLowerCase().indexOf(inputValue.toLowerCase()) === 0) {
+            let listItemResult = document.createElement('P');
+
+            listItemResult.innerText = townsArray[i].name;
+            filterResult.appendChild(listItemResult);
+        }
+    }
 });
 
 export {
