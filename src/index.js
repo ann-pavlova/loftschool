@@ -1,86 +1,66 @@
-/* ДЗ 1 - Функции */
+import './main.css';
+const friendsList = require('./list.hbs');
 
-/*
- Задание 1:
-
- Функция должна принимать один аргумент и возвращать его
- */
-function returnFirstArgument(arg) {
-    return arg;
+function api(method, params) {
+    return new Promise((resolve, reject) => {
+        VK.api(method, params, data => {
+            if(data.error) {
+                reject(new Error(data.error.error_msq));
+            } else {
+                resolve(data.response);
+            }
+        })
+    })
 }
 
-/*
- Задание 2:
+const promise = new Promise((resolve, reject) => {
+    VK.init({
+       apiId: 6201545
+    });
 
- Функция должна принимать два аргумента и возвращать сумму переданных значений
- Значение по умолчанию второго аргумента должно быть 100
- */
-function defaultParameterValue(a, b = 100) {
-    return a + b;
-}
+    VK.Auth.login(data => {
+        if (data.session) {
+            resolve(data);
+        } else {
+            reject(new Error('Не удалось авторизоваться'));
+        }
+    }, 8);
+});
 
-/*
- Задание 3:
+promise
+    .then(() => {
+        return api('users.get', {v: 5.68, name_case: 'gen'});
+    })
+    .then(() => {
+        return api('friends.get', {v: 5.68, fields: 'first_name, last_name, photo_50'});
+    })
+    .then(data => {
+        const result = document.querySelector('.j-list-all');
+        const temp = friendsList({list: data.items});
+        result.innerHTML = temp;
+    })
+    .then(() => {
+        let addBtn = document.querySelector('.b-main__list-right-part');
+        addBtn.addEventListener('click', function () {
+            let listNew = document.querySelector('.b-main__list_type_new');
+            let currentItem = this.parentElement;
+            listNew.appendChild(currentItem);
+            this.classList.add('is-active');
+        });
+    })
+    .then(() => {
+        let removeBtn = document.querySelector('.b-main__list-right-part.is-active');
+        removeBtn.addEventListener('click', function () {
+            let listAll = document.querySelector('.b-main__list_type_all');
+            let currentItem = this.parentElement;
+            listAll.appendChild(currentItem);
+            this.classList.remove('is-active');
+        });
+    })
+    .catch(function (e) {
+        alert('Ошибка: ' + e.message);
+    });
 
- Функция должна возвращать все переданные в нее аргументы в виде массива
- Количество переданных аргументов заранее неизвестно
- */
-function returnArgumentsArray() {
-    var array = [];
 
-    for (var i = 0; i <arguments.length; i++) {
-        array.push(arguments[i]);
-    }
 
-    return array;
-}
 
-/*
- Задание 4:
-
- Функция должна принимать другую функцию и возвращать результат вызова переданной функции
- */
-function returnFnResult(fn) {
-    return fn();
-}
-
-/*
- Задание 5:
-
- Функция должна принимать число (значение по умолчанию - 0) и возвращать функцию (F)
- При вызове F, переданное число должно быть увеличено на единицу и возвращено из F
- */
-function returnCounter(number) {
-    if (!number) {
-        number = 0;
-    }
-
-    return function F() {
-        return number+=1;
-    };
-}
-
-/*
- Задание 6 *:
-
- Функция должна принимать другую функцию (F) и некоторое количество дополнительных аргументов
- Функция должна привязать переданные аргументы к функции F и вернуть получившуюся функцию
- */
-function bindFunction(fn) {
-    var array = [];
-
-    for (var i = 0; i <arguments.length; i++) {
-        array.push(arguments[i]);
-    }
-
-    return fn.bind(...array);
-}
-
-export {
-    returnFirstArgument,
-    defaultParameterValue,
-    returnArgumentsArray,
-    returnFnResult,
-    returnCounter,
-    bindFunction
-}

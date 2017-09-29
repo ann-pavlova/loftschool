@@ -1,9 +1,25 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>{{htmlWebpackPlugin.options.title}}</title>
-</head>
-<body>
-</body>
-</html>
+<script type="text/javascript" src="http://vk.com/js/api/openapi.js"></script>
+<script src="src/index.js"></script>
+<link rel="stylesheet" href="https://code.cdn.mozilla.net/fonts/fira.css">
+<div>
+    <div class="b-container__wrap">
+        <div class="b-container">
+            <div class="b-top-panel">
+                <div class="b-top-panel__header">
+                    <div class="b-top-panel__header-ttl">Выберите друзей</div>
+                </div>
+            </div>
+            <div class="b-search">
+                <input type="search" placeholder="Начните вводить имя пользователя">
+                <input type="search" placeholder="Начните вводить имя пользователя">
+            </div>
+            <div class="b-main">
+                <div class="b-main__list-wrap j-list-all"></div>
+                <div class="b-main__list-wrap j-list-new">
+                    <div class="b-main__list-ttl">Друзья в списке:</div>
+                    <ul class="b-main__list b-main__list_type_new"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
