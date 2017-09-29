@@ -39,8 +39,33 @@ let addValueInput = homeworkContainer.querySelector('#add-value-input');
 let addButton = homeworkContainer.querySelector('#add-button');
 let listTable = homeworkContainer.querySelector('#list-table tbody');
 
+
 filterNameInput.addEventListener('keyup', function() {
 });
 
+let createNewCookie = function () {
+    document.cookie = addNameInput.value + "=" + addValueInput.value;
+};
+
+let deleteNewCookie = function () {
+    document.cookie = addNameInput.value + "=" + addValueInput.value + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+};
+
 addButton.addEventListener('click', () => {
+    createNewCookie(); //cоздали куку для браузера
+    let deleteCookieBtn = document.createElement("BUTTON");
+    deleteCookieBtn.innerText = 'Удалить';
+
+    let row = document.createElement("TR");
+    listTable.appendChild(row);//добавили строку
+
+    row.insertCell(0).innerHTML = addNameInput.value;//добавили имя куки
+    row.insertCell(1).innerHTML = addValueInput.value;//добавили значение куки
+    row.insertCell(2).appendChild(deleteCookieBtn);//добавили кнопку
+
+    deleteCookieBtn.addEventListener('click', function () {
+        deleteNewCookie();//удалили куку
+        let test = this.parentElement.parentElement;
+        listTable.removeChild(test);
+    });
 });

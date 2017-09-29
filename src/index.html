@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="homework-container"><style>
+    #homework-container {
+        font-family: Geneva, Arial, Helvetica, sans-serif;
+    }
+
+    #homework-container input {
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        padding: 5px;
+        margin: 5px 0;
+    }
+
+    #homework-container table {
+        width: 100%;
+    }
+
+    #homework-container table td,
+    #homework-container table th {
+        padding: 5px;
+        text-align: left;
+    }
+
+    #homework-container tbody tr:nth-child(odd) {
+        background: #ddd;
+    }
+</style>
+
+    <div id="filter-block">
+        Поиск cookie: <input type="text" id="filter-name-input" placeholder="имя cookie">
+    </div>
+    <hr>
+    <div id="add-block">
+        Добавить cookie:<br>
+        <input type="text" id="add-name-input" placeholder="имя cookie"><br>
+        <input type="text" id="add-value-input" placeholder="значение cookie"><br>
+        <button id="add-button">добавить cookie</button>
+    </div>
+    <hr>
+    <div id="list-block">
+        Доступные cookie:
+        <table id="list-table">
+            <thead>
+            <tr>
+                <th>имя</th>
+                <th>значение</th>
+                <th>удалить</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<script>
+    let homeworkContainer = document.querySelector('#homework-container');
+    let filterNameInput = homeworkContainer.querySelector('#filter-name-input');
+    let addNameInput = homeworkContainer.querySelector('#add-name-input');
+    let addValueInput = homeworkContainer.querySelector('#add-value-input');
+    let addButton = homeworkContainer.querySelector('#add-button');
+    let listTable = homeworkContainer.querySelector('#list-table tbody');
+
+
+    filterNameInput.addEventListener('keyup', function() {
+    });
+
+    let createNewCookie = function () {
+      document.cookie = addNameInput.value + "=" + addValueInput.value;
+    };
+
+    let deleteNewCookie = function () {
+        document.cookie = addNameInput.value + "=" + addValueInput.value + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    };
+
+    addButton.addEventListener('click', () => {
+        createNewCookie(); //cоздали куку для браузера
+        let deleteCookieBtn = document.createElement("BUTTON");
+        deleteCookieBtn.innerText = 'Удалить';
+
+        let row = document.createElement("TR");
+        listTable.appendChild(row);//добавили строку
+        row.insertCell(0).innerHTML = addNameInput.value;//добавили имя куки
+        row.insertCell(1).innerHTML = addValueInput.value;//добавили значение куки
+        row.insertCell(2).appendChild(deleteCookieBtn);//добавили кнопку
+
+        deleteCookieBtn.addEventListener('click', function () {
+            deleteNewCookie();//удалили куку
+            let test = this.parentElement.parentElement;
+            listTable.removeChild(test);
+        });
+    });
+
+</script>
+</body>
+</html>
