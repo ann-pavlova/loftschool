@@ -48,13 +48,24 @@ promise
             this.classList.add('is-active');
         });
     })
+    // .then(() => {
+    //     let removeBtn = document.querySelector('.b-main__list-right-part.is-active');
+    //     removeBtn.addEventListener('click', function () {
+    //         let listAll = document.querySelector('.b-main__list_type_all');
+    //         let currentItem = this.parentElement;
+    //         listAll.appendChild(currentItem);
+    //         this.classList.remove('is-active');
+    //     });
+    // })
     .then(() => {
-        let removeBtn = document.querySelector('.b-main__list-right-part.is-active');
-        removeBtn.addEventListener('click', function () {
-            let listAll = document.querySelector('.b-main__list_type_all');
-            let currentItem = this.parentElement;
-            listAll.appendChild(currentItem);
-            this.classList.remove('is-active');
+        function isMatching(full, chunk) {
+            return full.toLowerCase().indexOf(chunk.toLowerCase()) !== -1;
+        };
+
+        let input = document.querySelector('.search');
+        input.addEventListener('keyup', function() {
+            let inputValue = this.value;
+
         });
     })
     .catch(function (e) {
