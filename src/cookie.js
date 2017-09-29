@@ -52,7 +52,7 @@ let deleteNewCookie = function () {
 };
 
 addButton.addEventListener('click', () => {
-    createNewCookie(); //cоздали куку для браузера
+    createNewCookie();
     let deleteCookieBtn = document.createElement("BUTTON");
     deleteCookieBtn.innerText = 'Удалить';
 
@@ -69,3 +69,4 @@ addButton.addEventListener('click', () => {
         listTable.removeChild(test);
     });
 });
+

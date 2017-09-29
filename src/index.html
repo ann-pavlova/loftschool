@@ -65,34 +65,55 @@
     let addButton = homeworkContainer.querySelector('#add-button');
     let listTable = homeworkContainer.querySelector('#list-table tbody');
 
+    let cookies = [];
 
     filterNameInput.addEventListener('keyup', function() {
     });
 
-    let createNewCookie = function () {
-      document.cookie = addNameInput.value + "=" + addValueInput.value;
-    };
+    function deleteNewCookie(name) {
+        document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    }
 
-    let deleteNewCookie = function () {
-        document.cookie = addNameInput.value + "=" + addValueInput.value + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-    };
+    function updateCookie(name, value) {
+        for (var i = 0; i < cookies.length; i++) {
+            if (cookies[i].name === name) {
+                cookies[i].value = value;
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     addButton.addEventListener('click', () => {
-        createNewCookie(); //cоздали куку для браузера
-        let deleteCookieBtn = document.createElement("BUTTON");
-        deleteCookieBtn.innerText = 'Удалить';
+        let cookie = {name: addNameInput.value, value: addValueInput.value};
+        let isCookieUpdated = updateCookie(cookie.name, cookie.value);
+        if (!isCookieUpdated) {
+            cookies.push(cookie);
+        }
 
-        let row = document.createElement("TR");
-        listTable.appendChild(row);//добавили строку
-        row.insertCell(0).innerHTML = addNameInput.value;//добавили имя куки
-        row.insertCell(1).innerHTML = addValueInput.value;//добавили значение куки
-        row.insertCell(2).appendChild(deleteCookieBtn);//добавили кнопку
+        document.cookie = cookie.name + "=" + cookie.value;
 
-        deleteCookieBtn.addEventListener('click', function () {
-            deleteNewCookie();//удалили куку
-            let test = this.parentElement.parentElement;
-            listTable.removeChild(test);
-        });
+        if (isCookieUpdated) {
+            let tableRow = document.querySelector('[cookieName=' + cookie.name + ']').parentElement.parentElement;
+            tableRow.cells[1].innerHTML = cookie.value;
+        } else {
+            let deleteCookieBtn = document.createElement("BUTTON");
+            deleteCookieBtn.innerText = 'Удалить';
+            deleteCookieBtn.setAttribute("cookieName", cookie.name);
+            let row = document.createElement("TR");
+            listTable.appendChild(row);
+            row.insertCell(0).innerHTML = cookie.name;
+            row.insertCell(1).innerHTML = cookie.value;
+            row.insertCell(2).appendChild(deleteCookieBtn);
+
+            deleteCookieBtn.addEventListener('click', function () {
+                let cookieName = this.getAttribute('cookieName');
+                let currentCookieRow = this.parentElement.parentElement;
+                deleteNewCookie(cookieName);
+                listTable.removeChild(currentCookieRow);
+            });
+        }
     });
 
 </script>
