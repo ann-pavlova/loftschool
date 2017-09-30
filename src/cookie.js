@@ -42,27 +42,28 @@ let listTable = homeworkContainer.querySelector('#list-table tbody');
 
 function loadCookies() {
     let currentCookies = document.cookie.split('; ');
-    for(var i = 0; i< currentCookies.length; i++) {
+
+    for (let i = 0; i< currentCookies.length; i++) {
         let nameValue = currentCookies[i].split('=');
-        let cookieObject = {name: nameValue[0], value: nameValue[1]};
+        let cookieObject = { name: nameValue[0], value: nameValue[1] };
+
         cookiesBl.push(cookieObject);
     }
     addAllCookiesToTable();
 }
 
 function addAllCookiesToTable() {
-    for(let j = 0; j < cookiesBl.length; j++) {
+    for (let j = 0; j < cookiesBl.length; j++) {
         addCookieToTable(cookiesBl[j].name, cookiesBl[j].value);
     }
 }
-
 
 function deleteCookie(name) {
     document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
 
 function createOrUpdateCookie(name, value) {
-    document.cookie = name + "=" + value;
+    document.cookie = name + '=' + value;
 }
 
 function filterCookies() {
@@ -81,15 +82,16 @@ function filterCookies() {
     }
 }
 
-
 function addCookieToTable(name, value) {
-    if(!name) {
+    if (!name) {
         return;
     }
-    let deleteCookieBtn = document.createElement("BUTTON");
+    let deleteCookieBtn = document.createElement('BUTTON');
+
     deleteCookieBtn.innerText = 'Удалить';
-    deleteCookieBtn.setAttribute("cookieName", name);
-    let row = document.createElement("TR");
+    deleteCookieBtn.setAttribute('cookieName', name);
+    let row = document.createElement('TR');
+
     listTable.appendChild(row);
     row.insertCell(0).innerHTML = name;
     row.insertCell(1).innerHTML = value;
@@ -100,6 +102,7 @@ function addCookieToTable(name, value) {
 function deleteCookieClick (e) {
     let cookieName = e.target.getAttribute('cookieName');
     let currentCookieRow = this.parentElement.parentElement;
+
     deleteCookie(cookieName);
     deleteCookieBl(cookieName);
     listTable.removeChild(currentCookieRow);
@@ -107,6 +110,7 @@ function deleteCookieClick (e) {
 
 function addCookieEmptyFilter(cookie) {
     let isCookieUpdated = updateCookie(cookie.name, cookie.value);
+
     if (!isCookieUpdated) {
         cookiesBl.push(cookie);
     }
@@ -115,11 +119,13 @@ function addCookieEmptyFilter(cookie) {
 
     if (isCookieUpdated) {
         let deleteCell = document.querySelector('[cookieName=' + cookie.name + ']');
-        if(!deleteCell){
+
+        if (!deleteCell) {
             return;
         }
 
         let tableRow = deleteCell.parentElement.parentElement;
+
         tableRow.cells[1].innerHTML = cookie.value;
     } else {
         addCookieToTable(cookie.name, cookie.value);
@@ -127,18 +133,21 @@ function addCookieEmptyFilter(cookie) {
 }
 
 function addCookieNoEmptyFilter(cookie) {
-    if(cookie.name.indexOf(filterNameInput.value) === 0) {
+    if (cookie.name.indexOf(filterNameInput.value) === 0) {
         let isCookieUpdated = updateCookie(cookie.name, cookie.value);
+
         if (!isCookieUpdated) {
             cookiesBl.push(cookie);
         }
         if (isCookieUpdated) {
             let deleteCell = document.querySelector('[cookieName=' + cookie.name + ']');
-            if(!deleteCell){
+
+            if (!deleteCell) {
                 return;
             }
 
             let tableRow = deleteCell.parentElement.parentElement;
+
             tableRow.cells[1].innerHTML = cookie.value;
         } else {
             addCookieToTable(cookie.name, cookie.value);
@@ -151,8 +160,9 @@ function addCookieNoEmptyFilter(cookie) {
 }
 
 function addCookieClick() {
-    let cookie = {name: addNameInput.value, value: addValueInput.value};
-    if(filterNameInput.value === '') {
+    let cookie = { name: addNameInput.value, value: addValueInput.value };
+
+    if (filterNameInput.value === '') {
         addCookieEmptyFilter(cookie);
     } else {
         addCookieNoEmptyFilter(cookie);
@@ -160,10 +170,12 @@ function addCookieClick() {
 }
 
 function deleteCookieBl(name) {
-    for(let i = 0; i < cookiesBl.length; i++) {
-        if(cookiesBl[i].name === name) {
+    for (let i = 0; i < cookiesBl.length; i++) {
+        if (cookiesBl[i].name === name) {
             let index = cookiesBl.indexOf(cookiesBl[i]);
+
             cookiesBl.splice(index, 1);
+
             return;
         }
     }
@@ -173,6 +185,7 @@ function updateCookie(name, value) {
     for (let i = 0; i < cookiesBl.length; i++) {
         if (cookiesBl[i].name === name) {
             cookiesBl[i].value = value;
+
             return true;
         }
     }
@@ -185,6 +198,3 @@ window.addEventListener('load', () => {
     addButton.addEventListener('click', addCookieClick);
     filterNameInput.addEventListener('keyup', filterCookies);
 });
-
-
-

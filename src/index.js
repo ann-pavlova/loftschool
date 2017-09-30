@@ -28,7 +28,7 @@ function closeWindow(window) {
  * @param value - значение
  */
 function createCookie(name, value) {
-    return document.cookie = name + "=" + value;
+    return document.cookie = name + '=' + value;
 }
 
 /**
