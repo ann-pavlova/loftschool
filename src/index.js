@@ -1,5 +1,5 @@
 import './main.css';
-const friendsList = require('./list.hbs');
+const createFriendsView = require('./list.hbs');
 
 function api(method, params) {
     return new Promise((resolve, reject) => {
@@ -34,43 +34,61 @@ promise
     .then(() => {
         return api('friends.get', {v: 5.68, fields: 'first_name, last_name, photo_50'});
     })
-    .then(data => {
-        const result = document.querySelector('.j-list-all');
-        const temp = friendsList({list: data.items});
-        result.innerHTML = temp;
-    })
-    .then(() => {
-        let addBtn = document.querySelector('.b-main__list-right-part');
-        addBtn.addEventListener('click', function () {
-            let listNew = document.querySelector('.b-main__list_type_new');
-            let currentItem = this.parentElement;
-            listNew.appendChild(currentItem);
-            this.classList.add('is-active');
-        });
-    })
-    // .then(() => {
-    //     let removeBtn = document.querySelector('.b-main__list-right-part.is-active');
-    //     removeBtn.addEventListener('click', function () {
-    //         let listAll = document.querySelector('.b-main__list_type_all');
-    //         let currentItem = this.parentElement;
-    //         listAll.appendChild(currentItem);
-    //         this.classList.remove('is-active');
-    //     });
-    // })
-    .then(() => {
-        function isMatching(full, chunk) {
-            return full.toLowerCase().indexOf(chunk.toLowerCase()) !== -1;
-        };
-
-        let input = document.querySelector('.search');
-        input.addEventListener('keyup', function() {
-            let inputValue = this.value;
-
-        });
+    .then((data) => {
+        pageController.init(data.items);
     })
     .catch(function (e) {
         alert('Ошибка: ' + e.message);
     });
+
+let pageController = {
+    source: [],
+    target: [],
+    sourceDomContent: document.querySelector('.b-main__list_type_all'),
+    targetDomContent: document.querySelector('.b-main__list_type_new'),
+    init(friends) {
+        this.source = friends;
+        this.renderSourceFriends();
+    },
+    renderSourceFriends() {
+        this.sourceDomContent.innerHTML = createFriendsView({list: this.source, isTarget: false});
+        this.addSourceFriendEvents();
+    },
+    renderTargetFriends() {
+        this.targetDomContent.innerHTML = createFriendsView({list: this.target, isTarget: true});
+    },
+    addSourceFriendEvents() {
+        let friendItems = document.getElementsByClassName('b-main__list-item');
+        for(var i = 0; i < friendItems.length; i++) {
+            friendItems[i].querySelector('.b-main__list-right-part').addEventListener('click', this.moveFriendFromSource);
+        }
+    },
+    moveFriendFromSource(e) {
+        let that = pageController;
+        let target = e.currentTarget;
+        let friendId = parseInt(target.parentElement.getAttribute('friendId'));
+
+        let friend = that.searchAndGetFriendInArray(that.source, friendId);
+        if (!friend) {
+            return;
+        }
+
+        that.target.push(friend);
+        that.sourceDomContent.removeChild(target.parentElement);
+        that.renderTargetFriends();
+    },
+    searchAndGetFriendInArray(array, id) {
+        for(var i = 0; i < array.length; i++) {
+            if (array[i].id === id) {
+                let friends = array.splice(i ,1);
+                return friends[0];
+            }
+        }
+
+        return null;
+    }
+
+};
 
 
 

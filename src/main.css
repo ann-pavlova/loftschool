@@ -104,6 +104,6 @@ ul {
     margin-right: 10px;
 }
 
-.b-main__list-right-part.is-active {
+.b-main__list-right-part.is-target {
     transform: rotate(45deg);
 }

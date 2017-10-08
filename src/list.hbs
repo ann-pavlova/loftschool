@@ -1,14 +1,15 @@
-<div class="b-main__list-ttl">Ваши друзья:</div>
-<ul class="b-main__list b-main__list_type_all">
-    {{#each list}}
-        <li class="b-main__list-item">
-            <div class="b-main__list-left-part">
-                <div class="b-main__list-photo" style="background-image: url({{photo_50}});"></div>
-                <div class="b-main__list-name">{{first_name}} {{last_name}}</div>
-            </div>
-            <div class="b-main__list-right-part">
+{{#each list}}
+    <li class="b-main__list-item" friendId="{{id}}">
+        <div class="b-main__list-left-part">
+            <div class="b-main__list-photo" style="background-image: url({{photo_50}});"></div>
+            <div class="b-main__list-name">{{first_name}} {{last_name}}</div>
+        </div>
+        <div class="b-main__list-right-part">
+            {{#if isTarget}}
+                <img src="/src/img/remove.png" alt="">
+            {{else}}
                 <img src="/src/img/add.png" alt="">
-            </div>
-        </li>
-    {{/each}}
-</ul>
+            {{/if}}
+        </div>
+    </li>
+{{/each}}
