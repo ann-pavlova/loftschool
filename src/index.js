@@ -49,6 +49,8 @@ let pageController = {
     init(friends) {
         this.source = friends;
         this.renderSourceFriends();
+        document.querySelector('.b-main__list_type_new').addEventListener('dragover', this.handleDragOver, false);
+        document.querySelector('.b-main__list_type_new').addEventListener('drop', this.handleDragDrop, false);
     },
     renderSourceFriends() {
         this.sourceDomContent.innerHTML = createFriendsView({list: this.source, isTarget: false});
@@ -56,11 +58,20 @@ let pageController = {
     },
     renderTargetFriends() {
         this.targetDomContent.innerHTML = createFriendsView({list: this.target, isTarget: true});
+        this.addTargetFriendEvents();
     },
     addSourceFriendEvents() {
-        let friendItems = document.getElementsByClassName('b-main__list-item');
-        for(var i = 0; i < friendItems.length; i++) {
-            friendItems[i].querySelector('.b-main__list-right-part').addEventListener('click', this.moveFriendFromSource);
+        let friendSourceItems = document.querySelector('.b-main__list_type_all').getElementsByClassName('b-main__list-item');
+        for(var i = 0; i < friendSourceItems.length; i++) {
+            friendSourceItems[i].querySelector('.b-main__list-right-part').addEventListener('click', this.moveFriendFromSource);
+            friendSourceItems[i].addEventListener('dragstart', this.handleDragStart, false);
+            friendSourceItems[i].addEventListener('dragend', this.handleDragEnd, false);
+        }
+    },
+    addTargetFriendEvents() {
+        let friendTargetItems = document.querySelector('.b-main__list_type_new').getElementsByClassName('b-main__list-item');
+        for(var i = 0; i < friendTargetItems.length; i++) {
+            friendTargetItems[i].querySelector('.b-main__list-right-part').addEventListener('click', this.moveFriendFromTarget);
         }
     },
     moveFriendFromSource(e) {
@@ -77,6 +88,20 @@ let pageController = {
         that.sourceDomContent.removeChild(target.parentElement);
         that.renderTargetFriends();
     },
+    moveFriendFromTarget(e) {
+        let that = pageController;
+        let target = e.currentTarget;
+        let friendId = parseInt(target.parentElement.getAttribute('friendId'));
+
+        let friend = that.searchAndGetFriendInArray(that.target, friendId);
+        if (!friend) {
+            return;
+        }
+
+        that.source.push(friend);
+        that.targetDomContent.removeChild(target.parentElement);
+        that.renderSourceFriends();
+    },
     searchAndGetFriendInArray(array, id) {
         for(var i = 0; i < array.length; i++) {
             if (array[i].id === id) {
@@ -86,8 +111,27 @@ let pageController = {
         }
 
         return null;
+    },
+    handleDragStart(e) {
+        e.currentTarget.style.opacity = 0.4;
+        e.dataTransfer.setData('friendId', this.getAttribute('friendid'));
+    },
+    handleDragOver(e) {
+        e.preventDefault();
+    },
+    handleDragDrop(e) {
+        e.preventDefault();
+        if (e.target.classList.contains('b-main__list_type_new')) {
+            let friendId = parseInt(e.dataTransfer.getData('friendId'));
+            let friend = pageController.searchAndGetFriendInArray(pageController.source, friendId);
+            pageController.target.push(friend);
+            pageController.renderTargetFriends();
+            pageController.renderSourceFriends();
+        }
+    },
+    handleDragEnd(e) {
+        e.currentTarget.style.opacity = 1;
     }
-
 };
 
 

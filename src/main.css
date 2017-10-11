@@ -21,6 +21,12 @@ ul {
     padding: 0;
 }
 
+*[draggable=true] {
+    -moz-user-select:none;
+    -khtml-user-drag: element;
+    cursor: move;
+}
+
 .b-container__wrap {
     display: flex;
     align-items: center;
@@ -104,6 +110,3 @@ ul {
     margin-right: 10px;
 }
 
-.b-main__list-right-part.is-target {
-    transform: rotate(45deg);
-}

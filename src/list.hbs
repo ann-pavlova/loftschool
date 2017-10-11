@@ -1,15 +1,15 @@
 {{#each list}}
-    <li class="b-main__list-item" friendId="{{id}}">
+    <div class="b-main__list-item" friendid="{{id}}" draggable="true">
         <div class="b-main__list-left-part">
             <div class="b-main__list-photo" style="background-image: url({{photo_50}});"></div>
             <div class="b-main__list-name">{{first_name}} {{last_name}}</div>
         </div>
         <div class="b-main__list-right-part">
-            {{#if isTarget}}
+            {{#if @root.isTarget}}
                 <img src="/src/img/remove.png" alt="">
             {{else}}
                 <img src="/src/img/add.png" alt="">
             {{/if}}
         </div>
-    </li>
+    </div>
 {{/each}}
