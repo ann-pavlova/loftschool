@@ -13,34 +13,6 @@ function api(method, params) {
     })
 }
 
-const promise = new Promise((resolve, reject) => {
-    VK.init({
-       apiId: 6201545
-    });
-
-    VK.Auth.login(data => {
-        if (data.session) {
-            resolve(data);
-        } else {
-            reject(new Error('Не удалось авторизоваться'));
-        }
-    }, 8);
-});
-
-promise
-    .then(() => {
-        return api('users.get', {v: 5.68, name_case: 'gen'});
-    })
-    .then(() => {
-        return api('friends.get', {v: 5.68, fields: 'first_name, last_name, photo_50'});
-    })
-    .then((data) => {
-        pageController.init(data.items);
-    })
-    .catch(function (e) {
-        alert('Ошибка: ' + e.message);
-    });
-
 let pageController = {
     source: [],
     target: [],
@@ -51,13 +23,24 @@ let pageController = {
         this.renderSourceFriends();
         document.querySelector('.b-main__list_type_new').addEventListener('dragover', this.handleDragOver, false);
         document.querySelector('.b-main__list_type_new').addEventListener('drop', this.handleDragDrop, false);
+        document.querySelector('.b-search__list-all').addEventListener('input', this.filterSourceFriends);
+        document.querySelector('.b-search__list-new').addEventListener('input', this.filterTargetFriends);
+        document.querySelector('.b-save').addEventListener('click', this.saveState);
     },
     renderSourceFriends() {
         this.sourceDomContent.innerHTML = createFriendsView({list: this.source, isTarget: false});
         this.addSourceFriendEvents();
     },
+    renderSourceFriendsWithArray(friends) {
+        this.sourceDomContent.innerHTML = createFriendsView({list: friends, isTarget: false});
+        this.addSourceFriendEvents();
+    },
     renderTargetFriends() {
         this.targetDomContent.innerHTML = createFriendsView({list: this.target, isTarget: true});
+        this.addTargetFriendEvents();
+    },
+    renderTargetFriendsWithArray(friends) {
+        this.targetDomContent.innerHTML = createFriendsView({list: friends, isTarget: true});
         this.addTargetFriendEvents();
     },
     addSourceFriendEvents() {
@@ -100,7 +83,12 @@ let pageController = {
 
         that.source.push(friend);
         that.targetDomContent.removeChild(target.parentElement);
-        that.renderSourceFriends();
+        if (document.querySelector('.b-search__list-all').value === '') {
+            that.renderSourceFriends();
+        } else {
+            let filterFriends = that.filterFriends(that.source, document.querySelector('.b-search__list-all').value);
+            that.renderSourceFriendsWithArray(filterFriends);
+        }
     },
     searchAndGetFriendInArray(array, id) {
         for(var i = 0; i < array.length; i++) {
@@ -131,9 +119,77 @@ let pageController = {
     },
     handleDragEnd(e) {
         e.currentTarget.style.opacity = 1;
+    },
+    filterSourceFriends(e) {
+        let that = pageController;
+        let filterValue = e.target.value;
+        let filteredFriends = that.filterFriends(that.source, filterValue);
+        that.renderSourceFriendsWithArray(filteredFriends);
+    },
+    filterTargetFriends(e) {
+        let that = pageController;
+        let filterValue = e.target.value;
+        let filteredFriends = that.filterFriends(that.target, filterValue);
+        that.renderTargetFriendsWithArray(filteredFriends);
+    },
+    filterFriends(friends, filterValue) {
+        let filteredFriends = [];
+        for (let i = 0; i < friends.length; i++) {
+            if (friends[i].first_name.indexOf(filterValue) !== -1 ||
+                friends[i].last_name.indexOf(filterValue) !== -1 ||
+                (friends[i].first_name + ' ' + friends[i].last_name).indexOf(filterValue) !== -1) {
+                filteredFriends.push(friends[i]);
+            }
+        }
+
+        return filteredFriends;
+    },
+    saveState() {
+        let that = pageController;
+        localStorage.data = JSON.stringify({
+            filterSourceValue: document.querySelector('.b-search__list-all').value,
+            filterTargetValue: document.querySelector('.b-search__list-new').value,
+            source: that.source,
+            target: that.target
+        });
+    },
+    loadLocalStage() {
+        let data = JSON.parse(localStorage.data);
+        let that = pageController;
+        document.querySelector('.b-search__list-all').value = data.filterSourceValue;
+        document.querySelector('.b-search__list-new').value = data.filterTargetValue;
+        that.source = data.source;
+        that.target = data.target;
+        that.renderSourceFriends();
+        that.renderTargetFriends();
     }
 };
 
+if(localStorage.data !== undefined) {
+    pageController.loadLocalStage();
+} else {
+    const promise = new Promise((resolve, reject) => {
+        VK.init({
+            apiId: 6201545
+        });
 
+        VK.Auth.login(data => {
+            if (data.session) {
+                resolve(data);
+            } else {
+                reject(new Error('Не удалось авторизоваться'));
+            }
+        }, 8);
+    });
 
-
+    promise
+        .then(() => {
+            return api('friends.get', {v: 5.68, fields: 'first_name, last_name, photo_50'});
+        })
+        .then((data) => {
+            pageController.init(data.items);
+        })
+        .catch(function (e) {
+            alert('Ошибка: ' + e.message);
+        });
+}
