@@ -54,6 +54,20 @@ ul {
     background-color: #f0f0f0;
     padding: 10px 15px;
     font-family: firaSansLight;
+    position: relative;
+}
+
+.b-search input {
+    border-radius: 20px;
+    border: none;
+    width: 100%;
+    padding: 0 30px;
+    height: 30px;
+    background: #ffffff url('../src/img/search.png') 10px 50% no-repeat;
+}
+
+.b-search input:focus {
+    outline: none;
 }
 
 .b-main {
@@ -65,15 +79,16 @@ ul {
 .b-main__list {
     overflow-y: scroll;
     height: 80%;
+    padding: 0 0 0 15px;
 }
 
 .b-main__list-wrap {
     width: 50%;
-    padding: 15px;
 }
 
 .b-main__list-ttl {
     margin-bottom: 5px;
+    padding: 15px;
 }
 
 .b-main__list .b-main__list-item:last-child {
