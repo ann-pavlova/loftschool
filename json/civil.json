@@ -11,8 +11,8 @@
     },
     {
       "name": "underground tunnels for water supply",
-      "preview": "../img/projects/industrial/tunnel-preview.jpg",
-      "images": ["../img/projects/industrial/tunnel/01.jpg", "../img/projects/industrial/tunnel/02.jpg", "../img/projects/industrial/tunnel/03.jpg", "../img/projects/industrial/tunnel/04.jpg", "../img/projects/industrial/tunnel/05.jpg", "../img/projects/industrial/tunnel/06.jpg"]
+      "preview": "../img/projects/civil/tunnel-preview.jpg",
+      "images": ["../img/projects/civil/tunnel/01.jpg", "../img/projects/civil/tunnel/02.jpg", "../img/projects/civil/tunnel/03.jpg", "../img/projects/civil/tunnel/04.jpg", "../img/projects/civil/tunnel/05.jpg", "../img/projects/civil/tunnel/06.jpg"]
     }
   ]
 }
