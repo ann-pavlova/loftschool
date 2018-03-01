@@ -1,0 +1,19 @@
+{
+  "albums": [
+    {
+      "name": "Pedestrian bridge",
+      "description": {
+        "title": "Pedestrian bridge",
+        "text": "<p>Span is 69.7м.</p><p>XTF took part in development of the project. Our engineers produced design of main structures.</p>"
+      },
+      "preview": "../img/projects/civil/bridge-preview.jpg",
+      "images": ["../img/projects/civil/bridge/01.jpg", "../img/projects/industrial/bridge/02.jpg", "../img/projects/industrial/bridge/03.jpg", "../img/projects/industrial/bridge/04.jpg", "../img/projects/industrial/bridge/05.jpg"]
+    },
+    {
+      "name": "underground tunnels for water supply",
+      "preview": "../img/projects/industrial/tunnel-preview.jpg",
+      "images": ["../img/projects/industrial/tunnel/01.jpg", "../img/projects/industrial/tunnel/02.jpg", "../img/projects/industrial/tunnel/03.jpg", "../img/projects/industrial/tunnel/04.jpg", "../img/projects/industrial/tunnel/05.jpg", "../img/projects/industrial/tunnel/06.jpg"]
+    }
+  ]
+}
+
