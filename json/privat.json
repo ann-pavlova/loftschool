@@ -2,8 +2,8 @@
   "albums": [
     {
       "name": "townhouses",
-      "preview": "../img/projects/privat/meat-preview.jpg",
-      "images": ["../img/projects/privat/meat/01.jpg", "../img/projects/privat/meat/02.jpg", "../img/projects/privat/meat/03.jpg", "../img/projects/privat/meat/04.jpg", "../img/projects/privat/meat/05.jpg", "../img/projects/privat/meat/06.jpg"]
+      "preview": "../img/projects/privat/townhouses-preview.jpg",
+      "images": ["../img/projects/privat/townhouses/01.jpg", "../img/projects/privat/townhouses/02.jpg", "../img/projects/privat/townhouses/03.jpg", "../img/projects/privat/townhouses/04.jpg", "../img/projects/privat/townhouses/05.jpg", "../img/projects/privat/townhouses/06.jpg"]
     },
     {
       "name": "Houses",
